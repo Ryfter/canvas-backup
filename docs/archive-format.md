@@ -89,11 +89,14 @@ quizzes.json
 discussions.json
 due-dates.json
 due-dates.csv
+duplicates.json
 content-map.json
 download-report.json
 drive-sync.json
 ```
 
 `download-report.json` records counts, warnings, and failures.
+
+`duplicates.json` records exact duplicate downloaded files that were removed. Duplicate detection currently scans `files/`, not generated JSON or HTML metadata.
 
 `drive-sync.json` is created after Google Drive sync.

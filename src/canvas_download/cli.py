@@ -10,6 +10,7 @@ from canvas_download.archive import CourseArchiver
 from canvas_download.canvas_client import CanvasClient
 from canvas_download.config import ArchiveConfig, load_config
 from canvas_download.course_selection import CourseArchiveTarget, parse_number_selection, select_recent_courses
+from canvas_download.dedupe import dedupe_archive_files
 from canvas_download.drive import DriveSyncer, build_drive_service
 
 
@@ -30,6 +31,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     sync_drive = subparsers.add_parser("sync-drive", help="Mirror a local archive folder into Google Drive.")
     sync_drive.add_argument("--archive", required=True, type=Path, help="Local archive folder to upload.")
+
+    dedupe = subparsers.add_parser("dedupe", help="Remove exact duplicate downloaded Canvas files from a local archive.")
+    dedupe.add_argument("--archive", required=True, type=Path, help="Local archive folder to deduplicate.")
 
     archive_recent = subparsers.add_parser("archive-recent", help="Archive recent Canvas course shells in bulk.")
     archive_recent.add_argument("--years", type=int, default=4, help="Number of prior years to include. Default: 4.")
@@ -75,6 +79,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Synced archive to Google Drive folder ID: {result.archive_folder_id}")
             print(f"Uploaded: {result.uploaded}; updated: {result.updated}; skipped: {result.skipped}")
             print(f"Manifest: {result.manifest_path}")
+            return 0
+        if args.command == "dedupe":
+            result = dedupe_archive_files(args.archive, progress=print)
+            print(f"Duplicate manifest: {result.manifest_path}")
             return 0
         if args.command == "archive-recent":
             client = CanvasClient(config.canvas.base_url, config.canvas.token())

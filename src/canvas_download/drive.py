@@ -12,6 +12,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 from canvas_download.config import GoogleDriveConfig
+from canvas_download.dedupe import dedupe_archive_files
 from canvas_download.json_io import write_json
 
 
@@ -78,6 +79,7 @@ class DriveSyncer:
         if not archive_path.exists() or not archive_path.is_dir():
             raise ValueError(f"Archive folder does not exist: {archive_path}")
 
+        dedupe_archive_files(archive_path, progress=self.progress)
         self._progress(f"[Drive] Preparing folders for {archive_path.name}")
         root_folder_id = self._ensure_folder(self.root_folder_name, "root")
         parent_id = root_folder_id

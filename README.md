@@ -13,6 +13,8 @@ archive-root/
 
 The tool preserves Canvas file folders, module order, module items, pages, assignments, quizzes, discussions, and due-date manifests.
 
+After downloading, Canvas Backup checks downloaded Canvas files for exact duplicates, removes duplicate copies, and records the cleanup in `manifests/duplicates.json`. Drive sync runs the same duplicate check before uploading.
+
 ## Quick Start
 
 From PowerShell:
@@ -78,12 +80,14 @@ If Canvas file downloads are too slow, increase concurrent downloads:
 
 - Canvas course metadata.
 - Canvas file folders and files.
+- Exact duplicate downloaded files are removed after download and before Drive upload.
 - Modules and module items in order.
 - Pages as HTML plus JSON metadata.
 - Assignments as HTML plus JSON metadata.
 - Due dates as JSON and CSV.
 - Quizzes and discussion topics as JSON, with discussion HTML where available.
 - Download and Drive sync reports.
+- Duplicate cleanup reports.
 
 ## Important Safety Notes
 

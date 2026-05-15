@@ -83,6 +83,8 @@ This lists matching course shells and lets you practice the selection step witho
 .\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose
 ```
 
+After each shell downloads, duplicate files are checked and removed automatically.
+
 ## 9. Optional: Set Up Google Drive
 
 Follow [Google Drive Setup](google-drive.md), then run:

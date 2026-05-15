@@ -8,6 +8,7 @@ from typing import Any, Callable
 
 from canvas_download.canvas_client import CanvasApiError, CanvasClient
 from canvas_download.config import ArchiveConfig
+from canvas_download.dedupe import dedupe_archive_files
 from canvas_download.filesystem import ensure_within, numbered_name, safe_name
 from canvas_download.json_io import write_json, write_text
 
@@ -67,6 +68,10 @@ class CourseArchiver:
         quizzes = self._archive_quizzes(course_id, archive_path, report)
         discussions = self._archive_discussions(course_id, archive_path, report)
         due_dates = self._archive_due_dates(course_id, archive_path, assignments, report)
+        dedupe_result = dedupe_archive_files(archive_path, progress=self.progress)
+        report["counts"]["duplicate_sets"] = dedupe_result.duplicate_sets
+        report["counts"]["duplicate_files_removed"] = dedupe_result.removed
+        report["counts"]["duplicate_bytes_saved"] = dedupe_result.saved_bytes
 
         write_json(
             manifests / "content-map.json",

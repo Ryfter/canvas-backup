@@ -84,7 +84,19 @@ Use more concurrent Canvas file downloads during a bulk archive:
 .\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "D:\CanvasArchive\2026\Spring\ITM370"
 ```
 
-The sync command creates missing Google Drive folders automatically.
+The sync command checks for duplicate downloaded files, removes exact duplicates, then creates missing Google Drive folders automatically.
+
+## Remove Duplicates Without Uploading
+
+```powershell
+.\.venv\Scripts\canvas-backup --config config.local.toml dedupe --archive "D:\CanvasArchive\2026\Spring\ITM370"
+```
+
+This checks `files/` inside the archive. It removes exact duplicate file bytes and writes:
+
+```text
+manifests/duplicates.json
+```
 
 ## Progress Output
 
@@ -95,6 +107,7 @@ Examples:
 ```text
 [Course 2/8] 2025/Fall/ITM370
 [Canvas 12/140] downloaded: Week 3/lecture.pdf (300.5 MB total)
+[Dedupe] Removed duplicate: files/Week 3/lecture copy.pdf -> files/Week 3/lecture.pdf
 [Drive 12/140] updated: modules/01-Start Here/items.json
 ```
 

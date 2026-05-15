@@ -147,6 +147,7 @@ canvas-backup archive-recent --years 4 --choose --sync-drive
 - Manifests first: keep JSON and CSV metadata alongside downloaded content so the archive is useful even if Canvas URLs later change.
 - Preserve sequence: module order and item order should be explicit in `modules.json` and in readable module README files.
 - Preserve dates separately: due dates should live in dedicated manifests instead of being buried only inside assignment JSON.
+- Remove duplicate downloaded files before upload: exact duplicate file bytes are removed from `files/` and logged in `manifests/duplicates.json`.
 - Keep reruns safe: the downloader should be idempotent and should not delete prior archive files unless explicitly asked.
 
 ## Known Constraints

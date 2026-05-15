@@ -111,6 +111,18 @@ You can raise it for a single run:
 
 If Canvas returns rate-limit errors, lower the value to `4` or `2`. Canvas uses dynamic throttling, so very high concurrency can backfire.
 
+## Duplicate Files Were Removed
+
+Canvas Backup removes exact duplicate downloaded files from `files/` after archive download and before Drive sync. This only removes byte-for-byte duplicate files.
+
+Check the duplicate manifest:
+
+```text
+manifests/duplicates.json
+```
+
+The manifest records the kept file path, removed file paths, size, and SHA-256 hash.
+
 ## PowerShell Blocks `setup.ps1`
 
 Run:

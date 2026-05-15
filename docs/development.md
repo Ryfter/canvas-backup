@@ -27,6 +27,7 @@ src/canvas_download/
   cli.py                Command-line interface
   config.py             TOML and environment config
   course_selection.py   Bulk archive target inference and chooser parsing
+  dedupe.py             Exact duplicate downloaded file cleanup
   drive.py              Google Drive sync
   filesystem.py         Safe filenames and path guards
   json_io.py            JSON/text file helpers
