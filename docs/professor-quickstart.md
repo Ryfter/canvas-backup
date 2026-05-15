@@ -4,6 +4,8 @@ This is the shortest path for an instructor who wants to back up Canvas course s
 
 Canvas Backup creates a local archive first. Google Drive sync is optional and can be added later.
 
+If you are comfortable with command-line tools and want more implementation detail, see [Technical Professor Guide](technical-professor-guide.md).
+
 ## What You Need
 
 - Python 3.11 or newer.

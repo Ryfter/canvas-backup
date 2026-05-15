@@ -4,6 +4,8 @@ All commands are run from the project folder.
 
 For a first-time instructor workflow, start with [Professor Quick Start](professor-quickstart.md).
 
+For operational details, performance tuning, manifests, and recovery behavior, see [Technical Professor Guide](technical-professor-guide.md).
+
 Windows uses:
 
 ```powershell

@@ -4,6 +4,8 @@ This guide walks through a first-time setup for Windows, macOS, and Linux.
 
 If you want the shortest instructor-facing version, start with [Professor Quick Start](professor-quickstart.md).
 
+If you are helping another instructor or want more technical detail, see [Technical Professor Guide](technical-professor-guide.md).
+
 ## 1. Install Prerequisites
 
 Install:
