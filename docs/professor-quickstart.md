@@ -222,3 +222,21 @@ macOS/Linux:
 If `.venv`, `.env`, `config.local.toml`, or `secrets/` are missing, run setup again. Setup is safe to rerun.
 
 For more help, see [Troubleshooting](troubleshooting.md).
+
+## Updating Later
+
+If you installed with Git, update from the project folder:
+
+Windows PowerShell:
+
+```powershell
+.\scripts\update.ps1
+```
+
+macOS/Linux:
+
+```bash
+./scripts/update.sh
+```
+
+See [Updating Canvas Backup](updating.md) for details.

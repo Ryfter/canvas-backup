@@ -303,6 +303,20 @@ No output is the expected result.
 
 ## Useful Technical Commands
 
+Update from GitHub and refresh the local install:
+
+Windows:
+
+```powershell
+.\scripts\update.ps1
+```
+
+macOS/Linux:
+
+```bash
+./scripts/update.sh
+```
+
 Run tests:
 
 Windows:

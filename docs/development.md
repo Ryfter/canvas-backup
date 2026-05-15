@@ -29,6 +29,20 @@ macOS/Linux:
 ./scripts/test.sh
 ```
 
+## Pull And Refresh
+
+Windows PowerShell:
+
+```powershell
+.\scripts\update.ps1
+```
+
+macOS/Linux:
+
+```bash
+./scripts/update.sh
+```
+
 ## Project Layout
 
 ```text

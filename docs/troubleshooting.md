@@ -39,6 +39,22 @@ Do not look for the command inside `.venv` during normal use. The root launcher 
 
 The installed CLI is stale.
 
+The easiest fix is to run the update script:
+
+Windows PowerShell:
+
+```powershell
+.\scripts\update.ps1
+```
+
+macOS/Linux:
+
+```bash
+./scripts/update.sh
+```
+
+You can also refresh the install directly.
+
 Windows PowerShell:
 
 ```powershell

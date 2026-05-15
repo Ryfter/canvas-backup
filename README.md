@@ -86,6 +86,7 @@ Download selected shells and sync them to Google Drive by adding `--sync-drive` 
 - [Setup Guide](docs/setup.md)
 - [Configuration](docs/configuration.md)
 - [Command Reference](docs/commands.md)
+- [Updating Canvas Backup](docs/updating.md)
 - [Google Drive Setup](docs/google-drive.md)
 - [Archive Format](docs/archive-format.md)
 - [Troubleshooting](docs/troubleshooting.md)
