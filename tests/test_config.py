@@ -1,4 +1,6 @@
-from canvas_download.config import CanvasConfig
+from pathlib import Path
+
+from canvas_download.config import CanvasConfig, load_config
 
 
 def test_canvas_config_rejects_token_value_in_token_env() -> None:
@@ -20,3 +22,24 @@ def test_canvas_config_accepts_local_token_value() -> None:
     )
 
     assert config.token() == "real-token"
+
+
+def test_load_config_reads_download_workers(tmp_path: Path) -> None:
+    config_path = tmp_path / "config.toml"
+    config_path.write_text(
+        """
+[canvas]
+base_url = "https://canvas.example.edu"
+
+[archive]
+root = "D:/CanvasArchive"
+year = "2026"
+semester = "Spring"
+download_workers = 10
+""",
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.archive.download_workers == 10

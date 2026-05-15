@@ -34,6 +34,7 @@ token_env = "CANVAS_TOKEN"
 root = "D:/CanvasArchive"
 year = "2026"
 semester = "Spring"
+download_workers = 6
 
 [google_drive]
 enabled = false
@@ -83,6 +84,16 @@ root = "D:/CanvasArchive"
 `archive.year` and `archive.semester`
 
 Used by the single-course `archive` command. The `archive-recent` command infers year and semester per course.
+
+`archive.download_workers`
+
+The number of concurrent Canvas file downloads.
+
+```toml
+download_workers = 6
+```
+
+Increase this if downloads are too slow. Lower it if Canvas starts returning rate-limit errors.
 
 ## Google Drive Settings
 

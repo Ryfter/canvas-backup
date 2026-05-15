@@ -94,6 +94,23 @@ manifests/download-report.json
 manifests/drive-sync.json
 ```
 
+## Canvas Downloads Are Too Slow
+
+Canvas Backup downloads Canvas files concurrently. The default is:
+
+```toml
+[archive]
+download_workers = 6
+```
+
+You can raise it for a single run:
+
+```powershell
+.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
+```
+
+If Canvas returns rate-limit errors, lower the value to `4` or `2`. Canvas uses dynamic throttling, so very high concurrency can backfire.
+
 ## PowerShell Blocks `setup.ps1`
 
 Run:

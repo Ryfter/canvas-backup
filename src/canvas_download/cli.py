@@ -26,6 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
     archive.add_argument("--semester", help="Archive semester folder override.")
     archive.add_argument("--root", type=Path, help="Archive root override.")
     archive.add_argument("--shell-name", help="Folder name override for combined-section shells.")
+    archive.add_argument("--download-workers", type=int, help="Concurrent Canvas file downloads. Default from config.")
 
     sync_drive = subparsers.add_parser("sync-drive", help="Mirror a local archive folder into Google Drive.")
     sync_drive.add_argument("--archive", required=True, type=Path, help="Local archive folder to upload.")
@@ -38,6 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
     archive_recent.add_argument("--choose", action="store_true", help="Interactively choose which selected shells to archive.")
     archive_recent.add_argument("--dry-run", action="store_true", help="Show selected courses without downloading.")
     archive_recent.add_argument("--limit", type=int, help="Archive at most this many selected courses.")
+    archive_recent.add_argument("--download-workers", type=int, help="Concurrent Canvas file downloads. Default from config.")
 
     return parser
 
@@ -59,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
                 root=args.root or config.archive.root,
                 year=args.year or config.archive.year,
                 semester=args.semester or config.archive.semester,
+                download_workers=args.download_workers or config.archive.download_workers,
             )
             archiver = CourseArchiver(client, archive_config, progress=print)
             result = archiver.archive_course(args.course_id, shell_name=args.shell_name)
@@ -130,6 +133,7 @@ def _archive_recent(args: argparse.Namespace, config: object, client: CanvasClie
             root=args.root or config.archive.root,
             year=target.year,
             semester=target.semester,
+            download_workers=args.download_workers or config.archive.download_workers,
         )
         archiver = CourseArchiver(client, archive_config, progress=print)
         try:

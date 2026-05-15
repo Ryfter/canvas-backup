@@ -28,6 +28,12 @@ Override year, semester, or root:
 .\.venv\Scripts\canvas-backup --config config.local.toml archive --course-id 12345 --year 2025 --semester Fall --root "D:/CanvasArchive"
 ```
 
+Use more concurrent file downloads:
+
+```powershell
+.\.venv\Scripts\canvas-backup --config config.local.toml archive --course-id 12345 --download-workers 10
+```
+
 ## Preview Recent Courses
 
 ```powershell
@@ -52,6 +58,12 @@ Use `all` to select every listed course. Press Enter on a blank prompt to cancel
 
 ```powershell
 .\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive
+```
+
+Use more concurrent Canvas file downloads during a bulk archive:
+
+```powershell
+.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
 ```
 
 ## Limit A Test Run
@@ -82,7 +94,7 @@ Examples:
 
 ```text
 [Course 2/8] 2025/Fall/ITM370
-[Canvas] Downloaded file 12 (folder file 3/9): Week 3/lecture.pdf
+[Canvas 12/140] downloaded: Week 3/lecture.pdf (300.5 MB total)
 [Drive 12/140] updated: modules/01-Start Here/items.json
 ```
 

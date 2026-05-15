@@ -35,6 +35,7 @@ class ArchiveConfig:
     root: Path
     year: str
     semester: str
+    download_workers: int = 6
 
 
 @dataclass(frozen=True)
@@ -73,7 +74,12 @@ def load_config(path: Path | None = None) -> AppConfig:
             token_env=str(canvas_data.get("token_env", "CANVAS_TOKEN")),
             token_value=_optional_secret(canvas_data.get("token")),
         ),
-        archive=ArchiveConfig(root=Path(root), year=str(year), semester=str(semester)),
+        archive=ArchiveConfig(
+            root=Path(root),
+            year=str(year),
+            semester=str(semester),
+            download_workers=int(archive_data.get("download_workers", 6)),
+        ),
         google_drive=GoogleDriveConfig(
             enabled=bool(drive_data.get("enabled", False)),
             credentials_file=_optional_path(drive_data.get("credentials_file")),

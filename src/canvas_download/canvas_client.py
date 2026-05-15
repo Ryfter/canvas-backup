@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from pathlib import Path
 import time
 from typing import Any
 from urllib.parse import urljoin
@@ -23,12 +24,11 @@ class CanvasClient:
         self.base_url = base_url.rstrip("/") + "/"
         self.session = session or requests.Session()
         self.timeout = timeout
-        self.session.headers.update(
-            {
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/json",
-            }
-        )
+        self.headers = {
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/json",
+        }
+        self.session.headers.update(self.headers)
 
     def list_courses(self) -> list[dict[str, Any]]:
         return list(
@@ -104,11 +104,36 @@ class CanvasClient:
             next_params = None
 
     def download_file(self, url: str, target_path: str) -> None:
-        response = self._request("GET", url, stream=True)
-        with open(target_path, "wb") as handle:
-            for chunk in response.iter_content(chunk_size=1024 * 1024):
-                if chunk:
-                    handle.write(chunk)
+        target = Path(target_path)
+        partial = target.with_name(f"{target.name}.part")
+        last_error: Exception | None = None
+        for attempt in range(4):
+            try:
+                with requests.get(url, headers=self.headers, timeout=self.timeout, stream=True) as response:
+                    if response.status_code in {429, 500, 502, 503, 504} and attempt < 3:
+                        time.sleep(2**attempt)
+                        continue
+                    if response.status_code >= 400:
+                        raise CanvasApiError(f"Canvas file download {response.status_code} for {url}: {response.text}")
+                    with partial.open("wb") as handle:
+                        for chunk in response.iter_content(chunk_size=8 * 1024 * 1024):
+                            if chunk:
+                                handle.write(chunk)
+                partial.replace(target)
+                return
+            except requests.RequestException as exc:
+                last_error = exc
+                if attempt < 3:
+                    time.sleep(2**attempt)
+                    continue
+                raise CanvasApiError(f"Canvas file download failed for {url}: {exc}") from exc
+            except OSError as exc:
+                partial.unlink(missing_ok=True)
+                raise CanvasApiError(f"Could not write Canvas file download to {target}: {exc}") from exc
+            finally:
+                if partial.exists() and attempt == 3:
+                    partial.unlink(missing_ok=True)
+        raise CanvasApiError(f"Canvas file download failed for {url}: {last_error}")
 
     def _request(self, method: str, path_or_url: str, **kwargs: Any) -> requests.Response:
         url = path_or_url if path_or_url.startswith("http") else urljoin(self.base_url, path_or_url.lstrip("/"))

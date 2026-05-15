@@ -41,6 +41,7 @@ token_env = "CANVAS_TOKEN"
 root = "D:/CanvasArchive"
 year = "2026"
 semester = "Spring"
+download_workers = 6
 ```
 
 Preview recent shells:
@@ -53,6 +54,12 @@ Download the selected shells and sync them to Google Drive:
 
 ```powershell
 .\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive
+```
+
+If Canvas file downloads are too slow, increase concurrent downloads:
+
+```powershell
+.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
 ```
 
 ## Documentation

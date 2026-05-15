@@ -8,6 +8,7 @@ token_env = "CANVAS_TOKEN"
 root = "D:/CanvasArchive"
 year = "2026"
 semester = "Spring"
+download_workers = 6
 
 [google_drive]
 enabled = false

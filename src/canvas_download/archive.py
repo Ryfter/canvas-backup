@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import csv
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,6 +16,15 @@ from canvas_download.json_io import write_json, write_text
 class ArchiveResult:
     archive_path: Path
     report: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class FileDownloadTask:
+    file_id: Any
+    url: str
+    target_file: Path
+    relative_label: str
+    size: int | None = None
 
 
 class CourseArchiver:
@@ -79,7 +89,7 @@ class CourseArchiver:
         self._progress("[Canvas] Loading file folders")
         folders = self.client.list_folders(course_id)
         write_json(archive_path / "manifests" / "folders.json", folders)
-        file_count = 0
+        tasks: list[FileDownloadTask] = []
 
         folder_lookup = {folder.get("id"): folder for folder in folders}
         for folder_index, folder in enumerate(folders, start=1):
@@ -102,19 +112,51 @@ class CourseArchiver:
                 if not url:
                     report["warnings"].append({"type": "file_missing_url", "file_id": file_record.get("id")})
                     continue
-                try:
-                    self.client.download_file(url, str(target_file))
-                    file_count += 1
-                    self._progress(
-                        f"[Canvas] Downloaded file {file_count} "
-                        f"(folder file {folder_file_index}/{len(files)}): {folder_label}/{filename}"
+                tasks.append(
+                    FileDownloadTask(
+                        file_id=file_record.get("id"),
+                        url=url,
+                        target_file=target_file,
+                        relative_label=f"{folder_label}/{filename}",
+                        size=file_record.get("size") if isinstance(file_record.get("size"), int) else None,
                     )
-                except CanvasApiError as exc:
-                    report["failures"].append({"type": "file_download", "file_id": file_record.get("id"), "error": str(exc)})
+                )
+
+        file_count = self._download_files_concurrently(tasks, report)
 
         report["counts"]["folders"] = len(folders)
+        report["counts"]["queued_files"] = len(tasks)
         report["counts"]["downloaded_files"] = file_count
         return folders
+
+    def _download_files_concurrently(self, tasks: list[FileDownloadTask], report: dict[str, Any]) -> int:
+        if not tasks:
+            self._progress("[Canvas] No files to download")
+            return 0
+
+        workers = max(1, self.archive_config.download_workers)
+        self._progress(f"[Canvas] Downloading {len(tasks)} file(s) with {workers} worker(s)")
+        downloaded = 0
+        total_bytes = 0
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            future_map = {
+                executor.submit(self.client.download_file, task.url, str(task.target_file)): task
+                for task in tasks
+            }
+            for completed, future in enumerate(as_completed(future_map), start=1):
+                task = future_map[future]
+                try:
+                    future.result()
+                    downloaded += 1
+                    total_bytes += task.target_file.stat().st_size if task.target_file.exists() else task.size or 0
+                    self._progress(
+                        f"[Canvas {completed}/{len(tasks)}] downloaded: "
+                        f"{task.relative_label} ({format_bytes(total_bytes)} total)"
+                    )
+                except Exception as exc:
+                    report["failures"].append({"type": "file_download", "file_id": task.file_id, "error": str(exc)})
+                    self._progress(f"[Canvas {completed}/{len(tasks)}] failed: {task.relative_label}")
+        return downloaded
 
     def _archive_modules(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
         self._progress("[Canvas] Loading modules")
@@ -278,3 +320,13 @@ def _module_markdown(module_name: str, items: list[dict[str, Any]]) -> str:
         indent = "  " if item.get("indent") else ""
         lines.append(f"{index}. {indent}{title} [{item_type}]")
     return "\n".join(lines) + "\n"
+
+
+def format_bytes(value: int) -> str:
+    units = ["B", "KB", "MB", "GB", "TB"]
+    amount = float(value)
+    for unit in units:
+        if amount < 1024 or unit == units[-1]:
+            return f"{amount:.1f} {unit}" if unit != "B" else f"{int(amount)} B"
+        amount /= 1024
+    return f"{value} B"
