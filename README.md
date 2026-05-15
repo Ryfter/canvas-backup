@@ -81,6 +81,7 @@ Download selected shells and sync them to Google Drive by adding `--sync-drive` 
 
 ## Documentation
 
+- [Professor Quick Start](docs/professor-quickstart.md)
 - [Setup Guide](docs/setup.md)
 - [Configuration](docs/configuration.md)
 - [Command Reference](docs/commands.md)
