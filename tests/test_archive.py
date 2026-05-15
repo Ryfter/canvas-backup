@@ -58,9 +58,11 @@ class FakeCanvasClient:
 
 
 def test_archive_course_writes_expected_layout(tmp_path: Path) -> None:
+    messages: list[str] = []
     archiver = CourseArchiver(
         FakeCanvasClient(),
         ArchiveConfig(root=tmp_path, year="2026", semester="Spring"),
+        progress=messages.append,
     )
 
     result = archiver.archive_course("123")
@@ -73,3 +75,5 @@ def test_archive_course_writes_expected_layout(tmp_path: Path) -> None:
     assert (course_root / "assignments" / "Essay 1.json").exists()
     assert (course_root / "manifests" / "due-dates.csv").exists()
     assert result.report["counts"]["modules"] == 1
+    assert any("Downloaded file 1" in message for message in messages)
+    assert any("Module 1/1" in message for message in messages)

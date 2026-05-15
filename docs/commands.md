@@ -73,3 +73,17 @@ Use `all` to select every listed course. Press Enter on a blank prompt to cancel
 ```
 
 The sync command creates missing Google Drive folders automatically.
+
+## Progress Output
+
+Long-running commands print counters while they work.
+
+Examples:
+
+```text
+[Course 2/8] 2025/Fall/ITM370
+[Canvas] Downloaded file 12 (folder file 3/9): Week 3/lecture.pdf
+[Drive 12/140] updated: modules/01-Start Here/items.json
+```
+
+This output is informational. The final source of truth is still the manifest files in the archive.

@@ -60,14 +60,14 @@ def main(argv: list[str] | None = None) -> int:
                 year=args.year or config.archive.year,
                 semester=args.semester or config.archive.semester,
             )
-            archiver = CourseArchiver(client, archive_config)
+            archiver = CourseArchiver(client, archive_config, progress=print)
             result = archiver.archive_course(args.course_id, shell_name=args.shell_name)
             print(f"Archived course {args.course_id} to {result.archive_path}")
             print(f"Report: {result.archive_path / 'manifests' / 'download-report.json'}")
             return 0
         if args.command == "sync-drive":
             service = build_drive_service(config.google_drive)
-            syncer = DriveSyncer(service, root_folder_name=config.google_drive.root_folder_name)
+            syncer = DriveSyncer(service, root_folder_name=config.google_drive.root_folder_name, progress=print)
             result = syncer.sync_archive(args.archive)
             print(f"Synced archive to Google Drive folder ID: {result.archive_folder_id}")
             print(f"Uploaded: {result.uploaded}; updated: {result.updated}; skipped: {result.skipped}")
@@ -121,16 +121,17 @@ def _archive_recent(args: argparse.Namespace, config: object, client: CanvasClie
     drive_syncer: DriveSyncer | None = None
     if args.sync_drive:
         service = build_drive_service(config.google_drive)
-        drive_syncer = DriveSyncer(service, root_folder_name=config.google_drive.root_folder_name)
+        drive_syncer = DriveSyncer(service, root_folder_name=config.google_drive.root_folder_name, progress=print)
 
     failures = 0
-    for target in targets:
+    for course_index, target in enumerate(targets, start=1):
+        print(f"[Course {course_index}/{len(targets)}] {target.year}/{target.semester}/{target.shell_name}")
         archive_config = ArchiveConfig(
             root=args.root or config.archive.root,
             year=target.year,
             semester=target.semester,
         )
-        archiver = CourseArchiver(client, archive_config)
+        archiver = CourseArchiver(client, archive_config, progress=print)
         try:
             result = archiver.archive_course(target.course_id, shell_name=target.shell_name)
             print(f"Archived {target.course_id} to {result.archive_path}")

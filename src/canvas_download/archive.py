@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from canvas_download.canvas_client import CanvasApiError, CanvasClient
 from canvas_download.config import ArchiveConfig
@@ -18,17 +18,25 @@ class ArchiveResult:
 
 
 class CourseArchiver:
-    def __init__(self, client: CanvasClient, archive_config: ArchiveConfig) -> None:
+    def __init__(
+        self,
+        client: CanvasClient,
+        archive_config: ArchiveConfig,
+        progress: Callable[[str], None] | None = None,
+    ) -> None:
         self.client = client
         self.archive_config = archive_config
+        self.progress = progress
 
     def archive_course(self, course_id: int | str, shell_name: str | None = None) -> ArchiveResult:
+        self._progress(f"[Canvas] Loading course {course_id}")
         course = self.client.get_course(course_id)
         course_name = shell_name or course.get("name") or course.get("course_code") or f"course-{course_id}"
         root = self.archive_config.root
         archive_path = root / safe_name(self.archive_config.year) / safe_name(self.archive_config.semester) / safe_name(course_name)
         ensure_within(root, archive_path)
         archive_path.mkdir(parents=True, exist_ok=True)
+        self._progress(f"[Canvas] Archiving to {archive_path}")
 
         report: dict[str, Any] = {
             "course_id": course_id,
@@ -64,16 +72,20 @@ class CourseArchiver:
             },
         )
         write_json(manifests / "download-report.json", report)
+        self._progress(f"[Canvas] Finished {course_name}")
         return ArchiveResult(archive_path=archive_path, report=report)
 
     def _archive_files(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading file folders")
         folders = self.client.list_folders(course_id)
         write_json(archive_path / "manifests" / "folders.json", folders)
         file_count = 0
 
         folder_lookup = {folder.get("id"): folder for folder in folders}
-        for folder in folders:
+        for folder_index, folder in enumerate(folders, start=1):
             folder_path = self._folder_path(folder, folder_lookup)
+            folder_label = folder_path.as_posix() or "course files"
+            self._progress(f"[Canvas] Folder {folder_index}/{len(folders)}: {folder_label}")
             target_dir = ensure_within(archive_path, archive_path / "files" / folder_path)
             target_dir.mkdir(parents=True, exist_ok=True)
             try:
@@ -83,7 +95,7 @@ class CourseArchiver:
                 continue
 
             write_json(target_dir / "_canvas-files.json", files)
-            for file_record in files:
+            for folder_file_index, file_record in enumerate(files, start=1):
                 filename = safe_name(file_record.get("display_name") or file_record.get("filename"), fallback=f"file-{file_record.get('id')}")
                 target_file = ensure_within(archive_path, target_dir / filename)
                 url = file_record.get("url")
@@ -93,6 +105,10 @@ class CourseArchiver:
                 try:
                     self.client.download_file(url, str(target_file))
                     file_count += 1
+                    self._progress(
+                        f"[Canvas] Downloaded file {file_count} "
+                        f"(folder file {folder_file_index}/{len(files)}): {folder_label}/{filename}"
+                    )
                 except CanvasApiError as exc:
                     report["failures"].append({"type": "file_download", "file_id": file_record.get("id"), "error": str(exc)})
 
@@ -101,6 +117,7 @@ class CourseArchiver:
         return folders
 
     def _archive_modules(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading modules")
         modules = self.client.list_modules(course_id)
         module_root = archive_path / "modules"
         index_lines = [f"# Modules for course {course_id}", ""]
@@ -108,6 +125,7 @@ class CourseArchiver:
 
         for position, module in enumerate(modules, start=1):
             module_name = module.get("name") or f"module-{module.get('id')}"
+            self._progress(f"[Canvas] Module {position}/{len(modules)}: {module_name}")
             module_dir = module_root / numbered_name(position, module_name)
             module_dir.mkdir(parents=True, exist_ok=True)
             items = self.client.list_module_items(course_id, module["id"])
@@ -125,13 +143,15 @@ class CourseArchiver:
         return enriched_modules
 
     def _archive_pages(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading pages")
         pages = self.client.list_pages(course_id)
         page_root = archive_path / "pages"
         detailed_pages = []
-        for page in pages:
+        for index, page in enumerate(pages, start=1):
             page_url = page.get("url")
             if not page_url:
                 continue
+            self._progress(f"[Canvas] Page {index}/{len(pages)}: {page.get('title') or page_url}")
             try:
                 detail = self.client.get_page(course_id, page_url)
             except CanvasApiError as exc:
@@ -147,9 +167,11 @@ class CourseArchiver:
         return detailed_pages
 
     def _archive_assignments(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading assignments")
         assignments = self.client.list_assignments(course_id)
         assignment_root = archive_path / "assignments"
-        for assignment in assignments:
+        for index, assignment in enumerate(assignments, start=1):
+            self._progress(f"[Canvas] Assignment {index}/{len(assignments)}: {assignment.get('name') or assignment.get('id')}")
             name = safe_name(assignment.get("name"), fallback=f"assignment-{assignment.get('id')}")
             write_json(assignment_root / f"{name}.json", assignment)
             write_text(assignment_root / f"{name}.html", assignment.get("description") or "")
@@ -159,9 +181,11 @@ class CourseArchiver:
         return assignments
 
     def _archive_quizzes(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading quizzes")
         quizzes = self.client.list_quizzes(course_id)
         quiz_root = archive_path / "quizzes"
-        for quiz in quizzes:
+        for index, quiz in enumerate(quizzes, start=1):
+            self._progress(f"[Canvas] Quiz {index}/{len(quizzes)}: {quiz.get('title') or quiz.get('id')}")
             name = safe_name(quiz.get("title"), fallback=f"quiz-{quiz.get('id')}")
             write_json(quiz_root / f"{name}.json", quiz)
         write_json(archive_path / "manifests" / "quizzes.json", quizzes)
@@ -169,9 +193,11 @@ class CourseArchiver:
         return quizzes
 
     def _archive_discussions(self, course_id: int | str, archive_path: Path, report: dict[str, Any]) -> list[dict[str, Any]]:
+        self._progress("[Canvas] Loading discussions")
         discussions = self.client.list_discussion_topics(course_id)
         discussion_root = archive_path / "discussions"
-        for topic in discussions:
+        for index, topic in enumerate(discussions, start=1):
+            self._progress(f"[Canvas] Discussion {index}/{len(discussions)}: {topic.get('title') or topic.get('id')}")
             name = safe_name(topic.get("title"), fallback=f"discussion-{topic.get('id')}")
             write_json(discussion_root / f"{name}.json", topic)
             write_text(discussion_root / f"{name}.html", topic.get("message") or "")
@@ -238,6 +264,10 @@ class CourseArchiver:
             parent_id = current.get("parent_folder_id")
             current = lookup.get(parent_id)
         return Path(*reversed(parts)) if parts else Path()
+
+    def _progress(self, message: str) -> None:
+        if self.progress:
+            self.progress(message)
 
 
 def _module_markdown(module_name: str, items: list[dict[str, Any]]) -> str:

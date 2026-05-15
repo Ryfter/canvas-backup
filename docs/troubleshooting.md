@@ -83,6 +83,17 @@ manifests/download-report.json
 
 The tool is designed so reruns can reuse already-created folders and overwrite/update downloaded metadata.
 
+## The Command Looks Stuck
+
+Archive and Drive sync commands print counters while they work. If the same line does not change for a long time, the tool is probably waiting on a large Canvas file download or Google Drive upload.
+
+After the command finishes, check:
+
+```text
+manifests/download-report.json
+manifests/drive-sync.json
+```
+
 ## PowerShell Blocks `setup.ps1`
 
 Run:

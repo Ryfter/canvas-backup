@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import mimetypes
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from google.auth.transport.requests import Request as GoogleAuthRequest
 from google.oauth2.credentials import Credentials
@@ -62,9 +62,15 @@ def build_drive_service(config: GoogleDriveConfig) -> Any:
 
 
 class DriveSyncer:
-    def __init__(self, service: Any, root_folder_name: str = "Canvas Archive") -> None:
+    def __init__(
+        self,
+        service: Any,
+        root_folder_name: str = "Canvas Archive",
+        progress: Callable[[str], None] | None = None,
+    ) -> None:
         self.service = service
         self.root_folder_name = root_folder_name
+        self.progress = progress
         self._folder_cache: dict[tuple[str, str], str] = {}
 
     def sync_archive(self, archive_path: Path) -> DriveSyncResult:
@@ -72,6 +78,7 @@ class DriveSyncer:
         if not archive_path.exists() or not archive_path.is_dir():
             raise ValueError(f"Archive folder does not exist: {archive_path}")
 
+        self._progress(f"[Drive] Preparing folders for {archive_path.name}")
         root_folder_id = self._ensure_folder(self.root_folder_name, "root")
         parent_id = root_folder_id
         for part in archive_drive_parts(archive_path):
@@ -81,12 +88,14 @@ class DriveSyncer:
         updated = 0
         skipped = 0
         files: list[dict[str, Any]] = []
+        local_files = sorted(path for path in archive_path.rglob("*") if path.is_file())
+        sync_files = [
+            path for path in local_files if path.relative_to(archive_path).as_posix() != "manifests/drive-sync.json"
+        ]
+        skipped = len(local_files) - len(sync_files)
 
-        for local_file in sorted(path for path in archive_path.rglob("*") if path.is_file()):
+        for index, local_file in enumerate(sync_files, start=1):
             relative_path = local_file.relative_to(archive_path)
-            if relative_path.as_posix() == "manifests/drive-sync.json":
-                skipped += 1
-                continue
             folder_id = self._ensure_relative_folder(parent_id, relative_path.parent)
             existing = self._find_file(local_file.name, folder_id)
             uploaded_file = self._upload_file(local_file, folder_id, existing_id=existing.get("id") if existing else None)
@@ -96,6 +105,7 @@ class DriveSyncer:
             else:
                 uploaded += 1
                 action = "uploaded"
+            self._progress(f"[Drive {index}/{len(sync_files)}] {action}: {relative_path.as_posix()}")
             files.append(
                 {
                     "action": action,
@@ -121,6 +131,7 @@ class DriveSyncer:
         }
         manifest_path = archive_path / "manifests" / "drive-sync.json"
         write_json(manifest_path, manifest)
+        self._progress(f"[Drive] Finished sync: uploaded {uploaded}, updated {updated}, skipped {skipped}")
         return DriveSyncResult(
             root_folder_id=root_folder_id,
             archive_folder_id=parent_id,
@@ -197,6 +208,10 @@ class DriveSyncer:
             .create(body=body, media_body=media, fields="id, name, webViewLink", supportsAllDrives=True)
             .execute()
         )
+
+    def _progress(self, message: str) -> None:
+        if self.progress:
+            self.progress(message)
 
 
 def archive_drive_parts(archive_path: Path) -> list[str]:
