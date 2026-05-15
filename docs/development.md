@@ -34,6 +34,7 @@ macOS/Linux:
 ```text
 src/canvas_download/
   archive.py            Local archive writer
+  bootstrap.py          First-run local folder creator
   canvas_client.py      Canvas REST API client
   cli.py                Command-line interface
   config.py             TOML and environment config

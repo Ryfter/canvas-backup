@@ -39,7 +39,9 @@ chmod +x scripts/setup.sh
 ./scripts/setup.sh
 ```
 
-The setup script creates `.venv`, `.env`, `config.local.toml`, and `secrets/` if they do not already exist.
+The setup script creates `.venv`, `.env`, `config.local.toml`, `secrets/`, and the archive folder from your config if they do not already exist.
+
+After setup, use the launcher in the project folder. You do not need to find or run anything inside `.venv`.
 
 Edit `.env`:
 
@@ -66,13 +68,13 @@ Preview recent shells.
 Windows PowerShell:
 
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
+.\canvas-backup.ps1 --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
 macOS/Linux:
 
 ```bash
-./.venv/bin/canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
+./canvas-backup.sh --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
 Download selected shells and sync them to Google Drive by adding `--sync-drive` after Google Drive setup is complete.

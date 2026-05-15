@@ -5,16 +5,16 @@ All commands are run from the project folder.
 Windows uses:
 
 ```powershell
-.\.venv\Scripts\canvas-backup
+.\canvas-backup.ps1
 ```
 
 macOS/Linux uses:
 
 ```bash
-./.venv/bin/canvas-backup
+./canvas-backup.sh
 ```
 
-The examples below use `<canvas-backup>` as a placeholder for the command that matches your operating system.
+The examples below use `<canvas-backup>` as a placeholder for the command that matches your operating system. The launcher runs setup automatically if Canvas Backup has not been installed into `.venv` yet.
 
 ## List Courses
 

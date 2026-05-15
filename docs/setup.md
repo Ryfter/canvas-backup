@@ -62,8 +62,12 @@ The setup script creates:
 - `config.local.toml`
 - `.env`
 - `secrets/`
+- The archive folder named in `config.local.toml`
+- Parent folders for the Google credential and token files
 
 It also installs Canvas Backup into the virtual environment.
+
+After setup, use the launcher in the project folder. You do not need to find or run anything inside `.venv`.
 
 ## 4. Add Your Canvas Token
 
@@ -99,13 +103,13 @@ The `~` means your user home folder, so this works on Windows, macOS, and Linux.
 Windows PowerShell:
 
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml courses
+.\canvas-backup.ps1 --config config.local.toml courses
 ```
 
 macOS/Linux:
 
 ```bash
-./.venv/bin/canvas-backup --config config.local.toml courses
+./canvas-backup.sh --config config.local.toml courses
 ```
 
 If this lists your courses, Canvas access is working.
@@ -115,13 +119,13 @@ If this lists your courses, Canvas access is working.
 Windows PowerShell:
 
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
+.\canvas-backup.ps1 --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
 macOS/Linux:
 
 ```bash
-./.venv/bin/canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
+./canvas-backup.sh --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
 This lists matching course shells and lets you practice the selection step without downloading.
@@ -131,13 +135,13 @@ This lists matching course shells and lets you practice the selection step witho
 Windows PowerShell:
 
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose
+.\canvas-backup.ps1 --config config.local.toml archive-recent --years 4 --choose
 ```
 
 macOS/Linux:
 
 ```bash
-./.venv/bin/canvas-backup --config config.local.toml archive-recent --years 4 --choose
+./canvas-backup.sh --config config.local.toml archive-recent --years 4 --choose
 ```
 
 After each shell downloads, duplicate files are checked and removed automatically.

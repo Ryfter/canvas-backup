@@ -31,7 +31,7 @@ Created automatically after the first successful Google login. Do not create it 
 secrets/google-client-secret.json
 ```
 
-Create the folder if needed:
+The setup script creates this folder automatically. If needed, you can also create it manually:
 
 Windows PowerShell:
 
@@ -52,13 +52,13 @@ Run a sync command:
 Windows PowerShell:
 
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
+.\canvas-backup.ps1 --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
 ```
 
 macOS/Linux:
 
 ```bash
-./.venv/bin/canvas-backup --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
+./canvas-backup.sh --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
 ```
 
 Google opens a browser authorization page. After approval, the app creates:

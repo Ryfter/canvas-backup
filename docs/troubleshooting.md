@@ -17,7 +17,23 @@ chmod +x scripts/setup.sh
 ./scripts/setup.sh
 ```
 
-The setup script creates `.venv`, `.env`, `config.local.toml`, and `secrets/` if they are missing.
+The setup script creates `.venv`, `.env`, `config.local.toml`, `secrets/`, and configured local archive paths if they are missing.
+
+You can also use the root launcher. It runs setup automatically if Canvas Backup is not installed yet.
+
+Windows PowerShell:
+
+```powershell
+.\canvas-backup.ps1 --config config.local.toml courses
+```
+
+macOS/Linux:
+
+```bash
+./canvas-backup.sh --config config.local.toml courses
+```
+
+Do not look for the command inside `.venv` during normal use. The root launcher is the beginner-friendly command.
 
 ## `invalid choice: 'sync-drive'`
 
@@ -33,6 +49,12 @@ macOS/Linux:
 
 ```bash
 ./.venv/bin/python -m pip install -e ".[dev]"
+```
+
+You can also rerun the root launcher:
+
+```text
+<canvas-backup> --config config.local.toml courses
 ```
 
 ## `Canvas token is missing`

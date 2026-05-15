@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 PYTHON_BIN="${PYTHON:-python3}"
 
 if [ ! -d ".venv" ]; then
@@ -20,6 +23,8 @@ if [ ! -f ".env" ]; then
 fi
 
 mkdir -p secrets
+
+./.venv/bin/python -m canvas_download.bootstrap --config config.local.toml
 
 echo "Setup complete."
 echo "Next: edit .env and config.local.toml for your Canvas instance."
