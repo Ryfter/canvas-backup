@@ -1,0 +1,61 @@
+# Development
+
+## Install
+
+```powershell
+.\scripts\setup.ps1
+```
+
+## Run Tests
+
+```powershell
+.\scripts\test.ps1
+```
+
+Or directly:
+
+```powershell
+.\.venv\Scripts\python -m pytest
+```
+
+## Project Layout
+
+```text
+src/canvas_download/
+  archive.py            Local archive writer
+  canvas_client.py      Canvas REST API client
+  cli.py                Command-line interface
+  config.py             TOML and environment config
+  course_selection.py   Bulk archive target inference and chooser parsing
+  drive.py              Google Drive sync
+  filesystem.py         Safe filenames and path guards
+  json_io.py            JSON/text file helpers
+tests/
+  test_*.py
+docs/
+```
+
+## Release Checklist
+
+Before publishing changes:
+
+```powershell
+.\scripts\test.ps1
+git status --short
+```
+
+Confirm these files are not staged:
+
+- `.env`
+- `config.local.toml`
+- `secrets/google-client-secret.json`
+- `secrets/google-token.json`
+- `.venv/`
+
+## Design Principles
+
+- Local archive is canonical.
+- Google Drive sync mirrors the local archive.
+- Reruns should be safe.
+- Secrets must stay out of Git.
+- Course selection must be explicit when the instructor has access to unrelated shells.

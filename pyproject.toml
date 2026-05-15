@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "canvas-backup"
+version = "0.1.0"
+description = "Archive Canvas course shells locally and optionally sync them to Google Drive."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "google-api-python-client>=2.130.0",
+  "google-auth-oauthlib>=1.2.0",
+  "python-dotenv>=1.0.1",
+  "requests>=2.32.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+]
+[project.scripts]
+canvas-backup = "canvas_download.cli:main"
+canvas-download = "canvas_download.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,16 @@
+[canvas]
+base_url = "https://school.instructure.com"
+token_env = "CANVAS_TOKEN"
+# Optional for git-ignored local configs only:
+# token = "paste-token-here"
+
+[archive]
+root = "D:/CanvasArchive"
+year = "2026"
+semester = "Spring"
+
+[google_drive]
+enabled = false
+credentials_file = "secrets/google-client-secret.json"
+token_file = "secrets/google-token.json"
+root_folder_name = "Canvas Archive"
