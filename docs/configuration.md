@@ -17,10 +17,18 @@ The CLI automatically loads `.env` before reading the Canvas token.
 
 ## `config.local.toml`
 
-Start from:
+The setup script creates this file for you. To create it manually:
+
+Windows PowerShell:
 
 ```powershell
 Copy-Item config.example.toml config.local.toml
+```
+
+macOS/Linux:
+
+```bash
+cp config.example.toml config.local.toml
 ```
 
 Example:
@@ -31,7 +39,7 @@ base_url = "https://your-school.instructure.com"
 token_env = "CANVAS_TOKEN"
 
 [archive]
-root = "D:/CanvasArchive"
+root = "~/CanvasArchive"
 year = "2026"
 semester = "Spring"
 download_workers = 6
@@ -78,8 +86,10 @@ Prefer `.env` instead of placing tokens in TOML.
 The local archive root. Missing folders are created automatically.
 
 ```toml
-root = "D:/CanvasArchive"
+root = "~/CanvasArchive"
 ```
+
+The `~` expands to your home folder on Windows, macOS, and Linux.
 
 `archive.year` and `archive.semester`
 

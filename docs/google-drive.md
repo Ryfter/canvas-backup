@@ -25,24 +25,40 @@ Created automatically after the first successful Google login. Do not create it 
 9. Choose **Create Credentials > OAuth client ID**.
 10. Select **Desktop app**.
 11. Download the JSON file.
-12. Save it as:
+12. Save it in this project as:
 
 ```text
-D:\Dev\canvas-backup\secrets\google-client-secret.json
+secrets/google-client-secret.json
 ```
 
 Create the folder if needed:
 
+Windows PowerShell:
+
 ```powershell
 New-Item -ItemType Directory -Force secrets
+```
+
+macOS/Linux:
+
+```bash
+mkdir -p secrets
 ```
 
 ## First Sync
 
 Run a sync command:
 
+Windows PowerShell:
+
 ```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "D:\CanvasArchive\2026\Spring\ITM370"
+.\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
+```
+
+macOS/Linux:
+
+```bash
+./.venv/bin/canvas-backup --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
 ```
 
 Google opens a browser authorization page. After approval, the app creates:

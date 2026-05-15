@@ -62,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "archive":
             client = CanvasClient(config.canvas.base_url, config.canvas.token())
             archive_config = ArchiveConfig(
-                root=args.root or config.archive.root,
+                root=(args.root.expanduser() if args.root else config.archive.root),
                 year=args.year or config.archive.year,
                 semester=args.semester or config.archive.semester,
                 download_workers=args.download_workers or config.archive.download_workers,
@@ -75,13 +75,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "sync-drive":
             service = build_drive_service(config.google_drive)
             syncer = DriveSyncer(service, root_folder_name=config.google_drive.root_folder_name, progress=print)
-            result = syncer.sync_archive(args.archive)
+            result = syncer.sync_archive(args.archive.expanduser())
             print(f"Synced archive to Google Drive folder ID: {result.archive_folder_id}")
             print(f"Uploaded: {result.uploaded}; updated: {result.updated}; skipped: {result.skipped}")
             print(f"Manifest: {result.manifest_path}")
             return 0
         if args.command == "dedupe":
-            result = dedupe_archive_files(args.archive, progress=print)
+            result = dedupe_archive_files(args.archive.expanduser(), progress=print)
             print(f"Duplicate manifest: {result.manifest_path}")
             return 0
         if args.command == "archive-recent":
@@ -138,7 +138,7 @@ def _archive_recent(args: argparse.Namespace, config: object, client: CanvasClie
     for course_index, target in enumerate(targets, start=1):
         print(f"[Course {course_index}/{len(targets)}] {target.year}/{target.semester}/{target.shell_name}")
         archive_config = ArchiveConfig(
-            root=args.root or config.archive.root,
+            root=(args.root.expanduser() if args.root else config.archive.root),
             year=target.year,
             semester=target.semester,
             download_workers=args.download_workers or config.archive.download_workers,

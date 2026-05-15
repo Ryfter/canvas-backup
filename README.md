@@ -17,14 +17,29 @@ After downloading, Canvas Backup checks downloaded Canvas files for exact duplic
 
 ## Quick Start
 
-From PowerShell:
+Clone the repository:
+
+```bash
+git clone https://github.com/Ryfter/canvas-backup.git
+cd canvas-backup
+```
+
+Run setup.
+
+Windows PowerShell:
 
 ```powershell
-cd path\to\canvas-backup
 .\scripts\setup.ps1
-Copy-Item config.example.toml config.local.toml
-Copy-Item .env.example .env
 ```
+
+macOS/Linux:
+
+```bash
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+```
+
+The setup script creates `.venv`, `.env`, `config.local.toml`, and `secrets/` if they do not already exist.
 
 Edit `.env`:
 
@@ -40,29 +55,27 @@ base_url = "https://your-school.instructure.com"
 token_env = "CANVAS_TOKEN"
 
 [archive]
-root = "D:/CanvasArchive"
+root = "~/CanvasArchive"
 year = "2026"
 semester = "Spring"
 download_workers = 6
 ```
 
-Preview recent shells:
+Preview recent shells.
+
+Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
-Download the selected shells and sync them to Google Drive:
+macOS/Linux:
 
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive
+```bash
+./.venv/bin/canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
-If Canvas file downloads are too slow, increase concurrent downloads:
-
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
-```
+Download selected shells and sync them to Google Drive by adding `--sync-drive` after Google Drive setup is complete.
 
 ## Documentation
 

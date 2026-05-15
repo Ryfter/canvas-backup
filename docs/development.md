@@ -2,20 +2,31 @@
 
 ## Install
 
+Windows PowerShell:
+
 ```powershell
 .\scripts\setup.ps1
 ```
 
+macOS/Linux:
+
+```bash
+chmod +x scripts/setup.sh scripts/test.sh
+./scripts/setup.sh
+```
+
 ## Run Tests
+
+Windows PowerShell:
 
 ```powershell
 .\scripts\test.ps1
 ```
 
-Or directly:
+macOS/Linux:
 
-```powershell
-.\.venv\Scripts\python -m pytest
+```bash
+./scripts/test.sh
 ```
 
 ## Project Layout
@@ -40,8 +51,8 @@ docs/
 
 Before publishing changes:
 
-```powershell
-.\scripts\test.ps1
+```text
+Run the test script for your operating system.
 git status --short
 ```
 

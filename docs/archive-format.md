@@ -5,7 +5,7 @@ The archive is local-first. Google Drive sync mirrors the completed local archiv
 ## Top-Level Structure
 
 ```text
-D:/CanvasArchive/
+~/CanvasArchive/
   2026/
     Spring/
       ITM370/

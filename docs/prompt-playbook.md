@@ -76,7 +76,7 @@ Why this worked:
 ```text
 I ran:
 
-.\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "D:\CanvasArchive\2026\Spring\ITM370"
+<canvas-backup> --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
 
 It returned:
 

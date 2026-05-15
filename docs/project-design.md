@@ -55,7 +55,7 @@ The archive path should be supplied by config or CLI flags:
 Example:
 
 ```text
-D:/CanvasArchive/2026/Spring/ENG-101 Combined Sections/
+~/CanvasArchive/2026/Spring/ENG-101 Combined Sections/
 ```
 
 For combined sections, the shell name should come from the Canvas course shell, not from individual SIS sections. Section-level due date overrides should be recorded in the due-date manifests.
@@ -90,7 +90,7 @@ base_url = "https://school.instructure.com"
 token_env = "CANVAS_TOKEN"
 
 [archive]
-root = "D:/CanvasArchive"
+root = "~/CanvasArchive"
 year = "2026"
 semester = "Spring"
 
@@ -110,7 +110,7 @@ Recommended commands:
 ```text
 canvas-backup courses
 canvas-backup archive --course-id 12345 --year 2026 --semester Spring
-canvas-backup sync-drive --archive "D:/CanvasArchive/2026/Spring/ENG-101 Combined Sections"
+canvas-backup sync-drive --archive "~/CanvasArchive/2026/Spring/ENG-101 Combined Sections"
 canvas-backup archive-recent --years 4 --choose --sync-drive
 ```
 

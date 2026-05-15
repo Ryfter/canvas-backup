@@ -75,7 +75,7 @@ class DriveSyncer:
         self._folder_cache: dict[tuple[str, str], str] = {}
 
     def sync_archive(self, archive_path: Path) -> DriveSyncResult:
-        archive_path = archive_path.resolve()
+        archive_path = archive_path.expanduser().resolve()
         if not archive_path.exists() or not archive_path.is_dir():
             raise ValueError(f"Archive folder does not exist: {archive_path}")
 

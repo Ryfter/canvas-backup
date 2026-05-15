@@ -75,7 +75,7 @@ def load_config(path: Path | None = None) -> AppConfig:
             token_value=_optional_secret(canvas_data.get("token")),
         ),
         archive=ArchiveConfig(
-            root=Path(root),
+            root=Path(root).expanduser(),
             year=str(year),
             semester=str(semester),
             download_workers=int(archive_data.get("download_workers", 6)),
@@ -98,7 +98,7 @@ def _required(data: dict[str, Any], key: str, display: str) -> Any:
 def _optional_path(value: Any) -> Path | None:
     if not value:
         return None
-    return Path(value)
+    return Path(value).expanduser()
 
 
 def _optional_secret(value: Any) -> str | None:

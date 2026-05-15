@@ -29,7 +29,7 @@ def dedupe_archive_files(
     archive_path: Path,
     progress: Callable[[str], None] | None = None,
 ) -> DedupeResult:
-    archive_path = archive_path.resolve()
+    archive_path = archive_path.expanduser().resolve()
     files_root = archive_path / "files"
     manifest_path = archive_path / "manifests" / "duplicates.json"
 

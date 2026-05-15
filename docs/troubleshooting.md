@@ -1,13 +1,38 @@
 # Troubleshooting
 
+## `.venv` Does Not Exist
+
+Run the setup script first.
+
+Windows PowerShell:
+
+```powershell
+.\scripts\setup.ps1
+```
+
+macOS/Linux:
+
+```bash
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+```
+
+The setup script creates `.venv`, `.env`, `config.local.toml`, and `secrets/` if they are missing.
+
 ## `invalid choice: 'sync-drive'`
 
 The installed CLI is stale.
 
-Run:
+Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\python -m pip install -e ".[dev]"
+```
+
+macOS/Linux:
+
+```bash
+./.venv/bin/python -m pip install -e ".[dev]"
 ```
 
 ## `Canvas token is missing`
@@ -49,22 +74,24 @@ The Drive authorization worked, but the local archive folder has no files yet.
 
 Run a Canvas archive first:
 
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose
+```text
+<canvas-backup> --config config.local.toml archive-recent --years 4 --choose
 ```
 
 Then sync:
 
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml sync-drive --archive "D:\CanvasArchive\2026\Spring\ITM370"
+```text
+<canvas-backup> --config config.local.toml sync-drive --archive "~/CanvasArchive/2026/Spring/ITM370"
 ```
+
+Use the operating-system command from [Command Reference](commands.md) in place of `<canvas-backup>`.
 
 ## The Wrong Courses Are Selected
 
 Use interactive selection:
 
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --dry-run
+```text
+<canvas-backup> --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
 Then select only the course numbers you want.
@@ -105,8 +132,8 @@ download_workers = 6
 
 You can raise it for a single run:
 
-```powershell
-.\.venv\Scripts\canvas-backup --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
+```text
+<canvas-backup> --config config.local.toml archive-recent --years 4 --choose --sync-drive --download-workers 10
 ```
 
 If Canvas returns rate-limit errors, lower the value to `4` or `2`. Canvas uses dynamic throttling, so very high concurrency can backfire.

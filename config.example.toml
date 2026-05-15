@@ -5,7 +5,7 @@ token_env = "CANVAS_TOKEN"
 # token = "paste-token-here"
 
 [archive]
-root = "D:/CanvasArchive"
+root = "~/CanvasArchive"
 year = "2026"
 semester = "Spring"
 download_workers = 6

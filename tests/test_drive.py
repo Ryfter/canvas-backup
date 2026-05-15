@@ -17,7 +17,7 @@ class FakeDriveService:
 
 
 def test_archive_drive_parts_uses_year_semester_shell() -> None:
-    path = Path("D:/CanvasArchive/2026/Spring/ITM370")
+    path = Path("~/CanvasArchive/2026/Spring/ITM370")
 
     assert archive_drive_parts(path) == ["2026", "Spring", "ITM370"]
 
