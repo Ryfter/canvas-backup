@@ -60,3 +60,10 @@ Confirm these files are not staged:
 - Reruns should be safe.
 - Secrets must stay out of Git.
 - Course selection must be explicit when the instructor has access to unrelated shells.
+
+## AI-Assisted Build Notes
+
+For a nontechnical explanation of how this project was created, see:
+
+- [How Canvas Backup Was Created With AI](ai-build-workflow.md)
+- [Prompt Playbook](prompt-playbook.md)

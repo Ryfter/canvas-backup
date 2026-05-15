@@ -73,6 +73,8 @@ If Canvas file downloads are too slow, increase concurrent downloads:
 - [Archive Format](docs/archive-format.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Development](docs/development.md)
+- [How Canvas Backup Was Created With AI](docs/ai-build-workflow.md)
+- [Prompt Playbook](docs/prompt-playbook.md)
 - [Project Design](docs/project-design.md)
 - [Security Notes](SECURITY.md)
 
