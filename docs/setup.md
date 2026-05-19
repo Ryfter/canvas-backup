@@ -102,6 +102,8 @@ root = "~/CanvasArchive"
 
 The `~` means your user home folder, so this works on Windows, macOS, and Linux.
 
+You can also set `root` to an external drive or a local synced folder such as Google Drive Desktop, Dropbox, or OneDrive. See [Local And Synced Folder Backups](local-and-synced-folders.md).
+
 ## 6. Test Canvas Access
 
 Windows PowerShell:
@@ -150,6 +152,8 @@ macOS/Linux:
 
 After each shell downloads, duplicate files are checked and removed automatically.
 
-## 9. Optional: Set Up Google Drive
+## 9. Optional: Sync Or Upload
 
-Follow [Google Drive Setup](google-drive.md), then run the same archive command with `--sync-drive`.
+For many users, the easiest cloud backup is to set `archive.root` to a local Google Drive Desktop, Dropbox, or OneDrive folder.
+
+If you want Canvas Backup to upload through the Google Drive API instead, follow [Google Drive Setup](google-drive.md), then run the same archive command with `--sync-drive`.

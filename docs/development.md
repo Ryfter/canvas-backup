@@ -54,7 +54,7 @@ src/canvas_download/
   config.py             TOML and environment config
   course_selection.py   Bulk archive target inference and chooser parsing
   dedupe.py             Exact duplicate downloaded file cleanup
-  drive.py              Google Drive sync
+  drive.py              Optional Google Drive API sync
   filesystem.py         Safe filenames and path guards
   json_io.py            JSON/text file helpers
 tests/
@@ -82,7 +82,7 @@ Confirm these files are not staged:
 ## Design Principles
 
 - Local archive is canonical.
-- Google Drive sync mirrors the local archive.
+- Built-in Google Drive API sync is optional and mirrors the local archive when used.
 - Reruns should be safe.
 - Secrets must stay out of Git.
 - Course selection must be explicit when the instructor has access to unrelated shells.

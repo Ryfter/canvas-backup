@@ -1,6 +1,8 @@
 # Google Drive Setup
 
-Google Drive sync is optional. Canvas downloads work without Google Drive.
+Google Drive API sync is optional. Canvas downloads work without it.
+
+Many instructors do not need this setup. An easier option is to set `archive.root` to a local folder that already syncs through Google Drive Desktop, Dropbox, or OneDrive. See [Local And Synced Folder Backups](local-and-synced-folders.md).
 
 ## What The Files Mean
 

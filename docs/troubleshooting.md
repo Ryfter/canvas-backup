@@ -138,6 +138,25 @@ Then select only the course numbers you want.
 
 Add your Google account as a test user in the Google Cloud OAuth consent screen.
 
+## Running From Dropbox, OneDrive, Or Google Drive Desktop Fails
+
+Do not run the Canvas Backup project folder from inside a synced folder. Sync tools can lock or delay `.venv/`, `.git/`, and dependency files during setup.
+
+Use a normal local project folder:
+
+```text
+C:/Dev/canvas-backup
+```
+
+Then set the archive root to a synced folder if desired:
+
+```toml
+[archive]
+root = "C:/Users/YourName/Dropbox/CanvasArchive"
+```
+
+The project folder should be local. The archive folder can be synced.
+
 ## A Course Fails Partway Through
 
 Check:
@@ -150,7 +169,7 @@ The tool is designed so reruns can reuse already-created folders and overwrite/u
 
 ## The Command Looks Stuck
 
-Archive and Drive sync commands print counters while they work. If the same line does not change for a long time, the tool is probably waiting on a large Canvas file download or Google Drive upload.
+Archive and optional Drive sync commands print counters while they work. If the same line does not change for a long time, the tool is probably waiting on a large Canvas file download or Google Drive upload.
 
 After the command finishes, check:
 

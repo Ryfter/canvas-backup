@@ -6,6 +6,8 @@ For a first-time instructor workflow, start with [Professor Quick Start](profess
 
 For operational details, performance tuning, manifests, and recovery behavior, see [Technical Professor Guide](technical-professor-guide.md).
 
+For local folders, external drives, Google Drive Desktop, Dropbox, or OneDrive paths, see [Local And Synced Folder Backups](local-and-synced-folders.md).
+
 Windows uses:
 
 ```powershell
@@ -72,7 +74,7 @@ When prompted, enter numbers:
 
 Use `all` to select every listed course. Press Enter on a blank prompt to cancel.
 
-## Choose And Sync To Google Drive
+## Optional: Choose And Upload Through Google Drive API
 
 ```text
 <canvas-backup> --config config.local.toml archive-recent --years 4 --choose --sync-drive
@@ -103,6 +105,8 @@ Use more concurrent Canvas file downloads during a bulk archive:
 ```
 
 The sync command checks for duplicate downloaded files, removes exact duplicates, then creates missing Google Drive folders automatically.
+
+If your archive root is already inside a Google Drive Desktop, Dropbox, or OneDrive folder, you usually do not need `--sync-drive`.
 
 ## Remove Duplicates Without Uploading
 

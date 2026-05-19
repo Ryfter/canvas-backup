@@ -1,6 +1,6 @@
 # Canvas Backup
 
-Canvas Backup is a local-first Python tool for archiving Canvas LMS course shells and optionally mirroring those archives to Google Drive.
+Canvas Backup is a local-first Python tool for archiving Canvas LMS course shells to a folder on your computer. That folder can be a normal local folder, an external drive, or a folder that already syncs through Google Drive Desktop, Dropbox, or OneDrive.
 
 It is designed for instructors who want to keep a reusable course library organized by:
 
@@ -13,7 +13,7 @@ archive-root/
 
 The tool preserves Canvas file folders, module order, module items, pages, assignments, quizzes, discussions, and due-date manifests.
 
-After downloading, Canvas Backup checks downloaded Canvas files for exact duplicates, removes duplicate copies, and records the cleanup in `manifests/duplicates.json`. Drive sync runs the same duplicate check before uploading.
+After downloading, Canvas Backup checks downloaded Canvas files for exact duplicates, removes duplicate copies, and records the cleanup in `manifests/duplicates.json`. Built-in Google Drive API upload is optional.
 
 ## Quick Start
 
@@ -63,6 +63,8 @@ semester = "Spring"
 download_workers = 6
 ```
 
+To store archives in a synced folder, change `root` to that local folder path, such as a Google Drive Desktop, Dropbox, or OneDrive folder.
+
 Preview recent shells.
 
 Windows PowerShell:
@@ -77,7 +79,7 @@ macOS/Linux:
 ./canvas-backup.sh --config config.local.toml archive-recent --years 4 --choose --dry-run
 ```
 
-Download selected shells and sync them to Google Drive by adding `--sync-drive` after Google Drive setup is complete.
+Download selected shells by removing `--dry-run`. Add `--sync-drive` only if you want Canvas Backup to upload through the Google Drive API after the local download finishes.
 
 ## Documentation
 
@@ -87,6 +89,7 @@ Download selected shells and sync them to Google Drive by adding `--sync-drive` 
 - [Configuration](docs/configuration.md)
 - [Command Reference](docs/commands.md)
 - [Updating Canvas Backup](docs/updating.md)
+- [Local And Synced Folder Backups](docs/local-and-synced-folders.md)
 - [Google Drive Setup](docs/google-drive.md)
 - [Archive Format](docs/archive-format.md)
 - [Troubleshooting](docs/troubleshooting.md)
@@ -106,8 +109,7 @@ Download selected shells and sync them to Google Drive by adding `--sync-drive` 
 - Assignments as HTML plus JSON metadata.
 - Due dates as JSON and CSV.
 - Quizzes and discussion topics as JSON, with discussion HTML where available.
-- Download and Drive sync reports.
-- Duplicate cleanup reports.
+- Download reports, duplicate cleanup reports, and optional Drive sync reports.
 
 ## Important Safety Notes
 
@@ -119,10 +121,10 @@ Never commit secrets. These files are intentionally ignored:
 - `secrets/google-client-secret.json`
 - `secrets/google-token.json`
 
-Google Drive sync creates folders if they do not exist. Local archive folders are also created automatically.
+Local archive folders are created automatically. Google Drive API sync creates Drive folders if that optional workflow is used.
 
 ## Current Limitations
 
 - External tool content, publisher integrations, and embedded third-party media may only be preserved as links or metadata if Canvas does not expose the underlying file through the API.
 - Canvas access depends on the permissions attached to your Canvas token.
-- Google Drive sync mirrors the local archive. It does not replace the local archive.
+- Built-in Google Drive API sync is optional. A local Google Drive Desktop, Dropbox, or OneDrive folder may be enough for many users.

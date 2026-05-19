@@ -11,6 +11,8 @@ semester = "Spring"
 download_workers = 6
 
 [google_drive]
+# Optional advanced Google Drive API upload.
+# Most users can leave this off and set archive.root to a local synced folder instead.
 enabled = false
 credentials_file = "secrets/google-client-secret.json"
 token_file = "secrets/google-token.json"

@@ -2,7 +2,7 @@
 
 This is the shortest path for an instructor who wants to back up Canvas course shells.
 
-Canvas Backup creates a local archive first. Google Drive sync is optional and can be added later.
+Canvas Backup creates a local archive first. That archive can live in a normal folder, an external drive, or a folder that already syncs through Google Drive Desktop, Dropbox, or OneDrive. Built-in Google Drive API upload is optional and can be added later.
 
 If you are comfortable with command-line tools and want more implementation detail, see [Technical Professor Guide](technical-professor-guide.md).
 
@@ -11,7 +11,7 @@ If you are comfortable with command-line tools and want more implementation deta
 - Python 3.11 or newer.
 - Git, or a ZIP download of this repository.
 - A Canvas access token.
-- Optional: Google Drive credentials if you want automatic Drive upload.
+- Optional: Google Drive credentials if you want Canvas Backup to upload through the Google Drive API.
 
 ## One-Time Setup
 
@@ -89,6 +89,8 @@ root = "~/CanvasArchive"
 
 The `~` means your home folder. It works on Windows, macOS, and Linux.
 
+You can also set `root` to a local synced folder, such as a Google Drive Desktop, Dropbox, or OneDrive folder. See [Local And Synced Folder Backups](local-and-synced-folders.md).
+
 ## Daily Commands
 
 Run commands from the `canvas-backup` project folder.
@@ -159,11 +161,17 @@ When prompted, choose the shells you want:
 
 Use `all` only if every listed shell should be archived.
 
-## Add Google Drive Later
+## Use A Synced Folder Or Add Google Drive Later
 
-Local backup works without Google Drive.
+Local backup works without Google Drive API setup.
 
-When you are ready for Drive upload:
+The easiest cloud-backed option is often to set `archive.root` to a local folder that already syncs through Google Drive Desktop, Dropbox, or OneDrive.
+
+Do not put the Canvas Backup project folder itself inside Dropbox, OneDrive, or Google Drive Desktop. Put only the archive folder there.
+
+See [Local And Synced Folder Backups](local-and-synced-folders.md).
+
+When you are ready for built-in Google Drive API upload:
 
 1. Follow [Google Drive Setup](google-drive.md).
 2. Put the Google credential file at `secrets/google-client-secret.json`.
@@ -201,7 +209,7 @@ Inside each course shell, Canvas Backup saves:
 - Due dates.
 - Quizzes.
 - Discussions.
-- Download, duplicate, and Drive sync reports.
+- Download reports, duplicate cleanup reports, and optional Drive sync reports.
 
 ## If Something Is Missing
 

@@ -91,6 +91,8 @@ root = "~/CanvasArchive"
 
 The `~` expands to your home folder on Windows, macOS, and Linux.
 
+This can point to a normal local folder, external drive, network drive, or synced local folder such as Google Drive Desktop, Dropbox, or OneDrive. See [Local And Synced Folder Backups](local-and-synced-folders.md).
+
 `archive.year` and `archive.semester`
 
 Used by the single-course `archive` command. The `archive-recent` command infers year and semester per course.
@@ -106,6 +108,8 @@ download_workers = 6
 Increase this if downloads are too slow. Lower it if Canvas starts returning rate-limit errors.
 
 ## Google Drive Settings
+
+These settings are only needed if you use the built-in Google Drive API sync. They are not needed when `archive.root` points to a local folder that already syncs through Google Drive Desktop, Dropbox, or OneDrive.
 
 `google_drive.credentials_file`
 

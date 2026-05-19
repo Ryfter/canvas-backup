@@ -1,6 +1,6 @@
 # Archive Format
 
-The archive is local-first. Google Drive sync mirrors the completed local archive.
+The archive is local-first. Optional Google Drive API sync mirrors the completed local archive when used.
 
 ## Top-Level Structure
 
@@ -99,4 +99,4 @@ drive-sync.json
 
 `duplicates.json` records exact duplicate downloaded files that were removed. Duplicate detection currently scans `files/`, not generated JSON or HTML metadata.
 
-`drive-sync.json` is created after Google Drive sync.
+`drive-sync.json` is created after optional Google Drive API sync.

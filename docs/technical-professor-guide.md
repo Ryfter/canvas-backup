@@ -6,13 +6,13 @@ Most professors should start with [Professor Quick Start](professor-quickstart.m
 
 ## Mental Model
 
-Canvas Backup has three layers:
+Canvas Backup has two default layers, plus one optional upload layer:
 
 ```text
-Canvas API -> Local archive -> Optional Google Drive mirror
+Canvas API -> Local archive -> Optional Google Drive API mirror
 ```
 
-The local archive is the source of truth. Google Drive is treated as a sync target, not the primary storage location. This matters because local files are easier to inspect, deduplicate, retry, copy, diff, and recover if a cloud upload fails halfway through.
+The local archive is the source of truth. The archive root can be a normal local folder, external drive, network drive, or local folder synced by Google Drive Desktop, Dropbox, or OneDrive. Built-in Google Drive API sync is treated as an optional upload target, not the primary storage location.
 
 ## Repository Layout
 
@@ -99,6 +99,8 @@ The setup script creates missing local paths based on this config:
 - The archive root.
 - The `secrets/` folder.
 - Parent folders for Google credential and token files.
+
+The archive root can point to a local synced folder. See [Local And Synced Folder Backups](local-and-synced-folders.md).
 
 ## Archive Path Rules
 
@@ -236,11 +238,17 @@ The progress output shows counters such as:
 [Drive 12/140] updated: modules/01-Start Here/items.json
 ```
 
-## Google Drive Sync Details
+## Synced Folder And Google Drive API Details
 
-Drive sync is optional.
+Built-in Google Drive API sync is optional. A local synced folder may be simpler for many users.
 
-When enabled, the sync command:
+Use a synced folder when the user already has Google Drive Desktop, Dropbox, or OneDrive installed and wants normal desktop sync behavior.
+
+Use built-in Google Drive API sync when the user wants the tool itself to upload the completed archive to Google Drive.
+
+Avoid placing the project folder inside a synced folder. The archive root can be synced; the project folder should stay in a normal local folder.
+
+When Google Drive API sync is enabled, the sync command:
 
 - Checks duplicates before upload.
 - Creates the top-level Drive folder if missing.
@@ -365,4 +373,4 @@ macOS/Linux:
 - External tool content and publisher integrations may only be preserved as links or metadata.
 - Discussion replies and student-generated content may require additional API coverage depending on the course and permissions.
 - Duplicate detection is exact-match only.
-- Google Drive sync mirrors the local archive; it is not a replacement for keeping a local copy.
+- Built-in Google Drive API sync mirrors the local archive when used; it is not a replacement for keeping a local copy.
