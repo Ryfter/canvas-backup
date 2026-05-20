@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import sys
 
@@ -28,6 +29,15 @@ def build_parser() -> argparse.ArgumentParser:
     archive.add_argument("--root", type=Path, help="Archive root override.")
     archive.add_argument("--shell-name", help="Folder name override for combined-section shells.")
     archive.add_argument("--download-workers", type=int, help="Concurrent Canvas file downloads. Default from config.")
+    archive.add_argument(
+        "--json-progress",
+        action="store_true",
+        help=(
+            "Emit JSON-lines progress during download and a structured completion event "
+            "as the final line instead of human-readable text. "
+            "Intended for programmatic callers such as the Command & Control MCP bridge."
+        ),
+    )
 
     sync_drive = subparsers.add_parser("sync-drive", help="Mirror a local archive folder into Google Drive.")
     sync_drive.add_argument("--archive", required=True, type=Path, help="Local archive folder to upload.")
@@ -67,10 +77,24 @@ def main(argv: list[str] | None = None) -> int:
                 semester=args.semester or config.archive.semester,
                 download_workers=args.download_workers or config.archive.download_workers,
             )
-            archiver = CourseArchiver(client, archive_config, progress=print)
+            if args.json_progress:
+                progress_fn = lambda msg: print(json.dumps({"type": "progress", "message": msg}), flush=True)  # noqa: E731
+            else:
+                progress_fn = print
+            archiver = CourseArchiver(client, archive_config, progress=progress_fn)
             result = archiver.archive_course(args.course_id, shell_name=args.shell_name)
-            print(f"Archived course {args.course_id} to {result.archive_path}")
-            print(f"Report: {result.archive_path / 'manifests' / 'download-report.json'}")
+            if args.json_progress:
+                print(
+                    json.dumps({
+                        "type": "complete",
+                        "courseId": str(args.course_id),
+                        "archivePath": str(result.archive_path),
+                    }),
+                    flush=True,
+                )
+            else:
+                print(f"Archived course {args.course_id} to {result.archive_path}")
+                print(f"Report: {result.archive_path / 'manifests' / 'download-report.json'}")
             return 0
         if args.command == "sync-drive":
             service = build_drive_service(config.google_drive)
