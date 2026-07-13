@@ -17,25 +17,23 @@ After downloading, Canvas Backup checks downloaded Canvas files for exact duplic
 
 ## How It Works
 
-```mermaid
-flowchart LR
-    subgraph setup["One-time setup"]
-        direction LR
-        S1["1 - Run setup script"] --> S2["2 - Paste Canvas token"] --> S3["3 - Edit config file"]
-    end
+![How Canvas Backup works: one-time setup, then Canvas to your local archive, with optional Google Drive sync](docs/diagrams/how-it-works.png)
 
-    subgraph run["Each time you archive"]
-        direction LR
-        C["Canvas LMS"] --> P["Pick your courses<br/><i>--dry-run to preview</i>"]
-        P --> D["Download +<br/>remove duplicates<br/><i>runs in parallel</i>"]
-        D --> A["Your local archive"]
-        A -.optional.-> G["Google Drive"]
-    end
+## Using It
 
-    setup --> run
-```
+Four commands cover almost everything.
 
-The [Visual Guide](docs/visual-guide.md) walks through the same flow with the commands attached.
+![The four Canvas Backup commands: courses, preview with --dry-run, download, and optional Drive sync](docs/diagrams/using-it.png)
+
+Handy flags:
+
+| Flag | What it does |
+|------|--------------|
+| `--dry-run` | Show what would download. Downloads nothing. |
+| `--choose` | Pick from a numbered list instead of taking everything. |
+| `--limit 2` | Do a small test run before committing to a big one. |
+| `--download-workers 10` | Use more parallel downloads. Go faster. |
+| `--json-progress` | Emit JSON Lines instead of text. For scripts, not people. `archive` only. |
 
 ## Quick Start
 
@@ -107,7 +105,6 @@ Download selected shells by removing `--dry-run`. Add `--sync-drive` only if you
 
 **New here? Start with one of these.**
 
-- [Visual Guide](docs/visual-guide.md) — the whole tool in two diagrams and four commands.
 - [Professor Quick Start](docs/professor-quickstart.md) — the guided path, start to finish.
 - [Setup Guide](docs/setup.md) — installing it, in detail.
 

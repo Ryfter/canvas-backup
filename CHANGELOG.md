@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [Visual Guide](docs/visual-guide.md): the whole tool in two diagrams and four commands.
-- Workflow diagram in the README, rendered inline by GitHub.
-- Editable Excalidraw sources in `docs/diagrams/`.
+- Two diagrams embedded in the README: how the tool works, and the four commands you actually
+  use. Sources live in `docs/diagrams/*.mmd`; `scripts/render-diagrams.*` regenerates the PNGs.
+- Handy-flags table in the README.
 
 ### Changed
 
