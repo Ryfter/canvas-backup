@@ -15,6 +15,28 @@ The tool preserves Canvas file folders, module order, module items, pages, assig
 
 After downloading, Canvas Backup checks downloaded Canvas files for exact duplicates, removes duplicate copies, and records the cleanup in `manifests/duplicates.json`. Built-in Google Drive API upload is optional.
 
+## How It Works
+
+```mermaid
+flowchart LR
+    subgraph setup["One-time setup"]
+        direction LR
+        S1["1 - Run setup script"] --> S2["2 - Paste Canvas token"] --> S3["3 - Edit config file"]
+    end
+
+    subgraph run["Each time you archive"]
+        direction LR
+        C["Canvas LMS"] --> P["Pick your courses<br/><i>--dry-run to preview</i>"]
+        P --> D["Download +<br/>remove duplicates<br/><i>runs in parallel</i>"]
+        D --> A["Your local archive"]
+        A -.optional.-> G["Google Drive"]
+    end
+
+    setup --> run
+```
+
+The [Visual Guide](docs/visual-guide.md) walks through the same flow with the commands attached.
+
 ## Quick Start
 
 Clone the repository:
@@ -83,21 +105,33 @@ Download selected shells by removing `--dry-run`. Add `--sync-drive` only if you
 
 ## Documentation
 
-- [Professor Quick Start](docs/professor-quickstart.md)
-- [Technical Professor Guide](docs/technical-professor-guide.md)
-- [Setup Guide](docs/setup.md)
-- [Configuration](docs/configuration.md)
-- [Command Reference](docs/commands.md)
-- [Updating Canvas Backup](docs/updating.md)
-- [Local And Synced Folder Backups](docs/local-and-synced-folders.md)
-- [Google Drive Setup](docs/google-drive.md)
-- [Archive Format](docs/archive-format.md)
-- [Troubleshooting](docs/troubleshooting.md)
+**New here? Start with one of these.**
+
+- [Visual Guide](docs/visual-guide.md) — the whole tool in two diagrams and four commands.
+- [Professor Quick Start](docs/professor-quickstart.md) — the guided path, start to finish.
+- [Setup Guide](docs/setup.md) — installing it, in detail.
+
+**Everyday use**
+
+- [Command Reference](docs/commands.md) — every command and flag.
+- [Configuration](docs/configuration.md) — what goes in `config.local.toml`.
+- [Troubleshooting](docs/troubleshooting.md) — when something goes wrong.
+- [Updating Canvas Backup](docs/updating.md) — getting the latest version.
+
+**Going further**
+
+- [Technical Professor Guide](docs/technical-professor-guide.md) — performance, manifests, recovery.
+- [Local And Synced Folder Backups](docs/local-and-synced-folders.md) — external drives, Dropbox, OneDrive.
+- [Google Drive Setup](docs/google-drive.md) — the optional Drive API upload.
+- [Archive Format](docs/archive-format.md) — exactly what lands on disk.
+- [Security Notes](SECURITY.md) — protecting your Canvas token.
+
+**Contributing and background**
+
 - [Development](docs/development.md)
+- [Project Design](docs/project-design.md)
 - [How Canvas Backup Was Created With AI](docs/ai-build-workflow.md)
 - [Prompt Playbook](docs/prompt-playbook.md)
-- [Project Design](docs/project-design.md)
-- [Security Notes](SECURITY.md)
 
 ## What Gets Downloaded
 

@@ -5,6 +5,18 @@ All notable changes to Canvas Backup are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- [Visual Guide](docs/visual-guide.md): the whole tool in two diagrams and four commands.
+- Workflow diagram in the README, rendered inline by GitHub.
+- Editable Excalidraw sources in `docs/diagrams/`.
+
+### Changed
+
+- Grouped the README documentation index by audience so newcomers know where to start.
+
 ## [1.0.0] - 2026-07-12
 
 First released version. Canvas Backup archives Canvas LMS course shells to a local
