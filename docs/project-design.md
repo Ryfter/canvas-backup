@@ -150,6 +150,42 @@ canvas-backup archive-recent --years 4 --choose --sync-drive
 - Remove duplicate downloaded files before upload: exact duplicate file bytes are removed from `files/` and logged in `manifests/duplicates.json`.
 - Keep reruns safe: the downloader should be idempotent and should not delete prior archive files unless explicitly asked.
 
+## Command & Control Integration
+
+Canvas Backup is now part of the four-project workflow:
+
+```text
+Canvas Backup -> Curriculum Intelligence -> Canvas Design Studio
+                coordinated by Command & Control MCP
+```
+
+Command & Control does not import this Python project as an npm package. It invokes the existing CLI through a small bridge:
+
+1. `CANVAS_BACKUP_COMMAND`, if set.
+2. `CANVAS_BACKUP_REPO` plus its `.venv`, if set.
+3. A sibling checkout at `../Canvas-Download` plus its `.venv`.
+4. `canvas-backup` on `PATH`.
+
+Reasoning:
+
+- This repo already has working setup scripts, launchers, tests, and local-first archive behavior.
+- Rewriting it in Go or TypeScript just to satisfy C&C would add risk before the full professor workflow is proven.
+- Go remains a reasonable future target for a single installer/launcher, or for a downloader rewrite if Python packaging becomes the adoption bottleneck.
+
+Integration contract:
+
+- The local archive is the canonical output.
+- `manifests/course.json`, `modules.json`, `pages.json`, and `assignments.json` are required by downstream tools.
+- `modules/*/items.json`, `pages/*.html`, and `assignments/*.html` are required for high-quality import into Design Studio and analysis in Curriculum Intelligence.
+- Bulk Panopto transcript download is still pending and should live here as the download step; Curriculum Intelligence should own transcript analysis.
+
+Architecture review follow-ups:
+
+- Package Canvas Backup as a self-contained Windows executable (`canvas-backup.exe`) with PyInstaller or PyOxidizer before broad professor adoption.
+- Machine-readable progress output shipped as `--json-progress`. It is currently implemented on `archive` only. Extend it to `archive-recent`, which is the longer-running subcommand and the one a programmatic caller is most likely to need it on.
+- Keep plain human-readable CLI output as the default for direct terminal use.
+- Let Command & Control persist an explicit executable path instead of relying only on `.venv` or PATH discovery.
+
 ## Known Constraints
 
 - Canvas content embedded from external tools may not be downloadable through Canvas APIs. The archive should preserve links and metadata for those items.

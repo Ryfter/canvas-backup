@@ -134,3 +134,25 @@ Examples:
 ```
 
 This output is informational. The final source of truth is still the manifest files in the archive.
+
+## Machine-Readable Progress
+
+The `archive` command can emit JSON Lines instead of human-readable text. This is intended for programmatic callers, not for direct terminal use.
+
+```text
+<canvas-backup> --config config.local.toml archive --course-id 12345 --json-progress
+```
+
+Every line written to standard output is a single JSON object. Progress lines look like:
+
+```json
+{"type": "progress", "message": "[Canvas 12/140] downloaded: Week 3/lecture.pdf"}
+```
+
+The final line on success is a completion event:
+
+```json
+{"type": "complete", "courseId": "12345", "archivePath": "/home/you/CanvasArchive/2026/Spring/ITM370"}
+```
+
+This flag is available on `archive` only. `archive-recent` always prints human-readable progress.

@@ -4,10 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "canvas-backup"
-version = "0.1.0"
+version = "1.0.0"
 description = "Archive Canvas course shells locally and optionally sync them to Google Drive."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = [
   "google-api-python-client>=2.130.0",
   "google-auth-oauthlib>=1.2.0",
