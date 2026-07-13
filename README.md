@@ -35,6 +35,10 @@ Handy flags:
 | `--download-workers 10` | Use more parallel downloads. Go faster. |
 | `--json-progress` | Emit JSON Lines instead of text. For scripts, not people. `archive` only. |
 
+Both diagrams also come in a softer sketch style, handy for slides or a handout:
+[how it works](docs/diagrams/how-it-works-sketch.png) and
+[using it](docs/diagrams/using-it-sketch.png).
+
 ## Quick Start
 
 Clone the repository:

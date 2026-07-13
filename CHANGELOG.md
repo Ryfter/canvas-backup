@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Two diagrams embedded in the README: how the tool works, and the four commands you actually
   use. Sources live in `docs/diagrams/*.mmd`; `scripts/render-diagrams.*` regenerates the PNGs.
+- Sketch-style variants of both diagrams (`docs/diagrams/*-sketch.png`), linked from the README
+  for use in slides and handouts.
 - Handy-flags table in the README.
 
 ### Changed

@@ -1,0 +1,31 @@
+%% Sketch variant of how-it-works.mmd. Regenerate with: scripts/render-diagrams.sh
+%%{init: {"look": "handDrawn"}}%%
+flowchart LR
+    subgraph setup["One-time setup"]
+        direction LR
+        S1["1 - Run setup script"] --> S2["2 - Paste Canvas token"] --> S3["3 - Edit config file"]
+    end
+
+    subgraph run["Each time you archive"]
+        direction LR
+        C["Canvas LMS"] --> P["Pick your courses<br/>--dry-run to preview"]
+        P --> D["Download +<br/>remove duplicates<br/>runs in parallel"]
+        D --> A["Your local archive"]
+        A -.optional.-> G["Google Drive"]
+    end
+
+    setup --> run
+
+    classDef amber fill:#ffd8a8,stroke:#f59e0b,color:#1e1e1e
+    classDef blue fill:#a5d8ff,stroke:#4a9eed,color:#1e1e1e
+    classDef yellow fill:#fff3bf,stroke:#f59e0b,color:#1e1e1e
+    classDef purple fill:#d0bfff,stroke:#8b5cf6,color:#1e1e1e
+    classDef green fill:#b2f2bb,stroke:#22c55e,color:#1e1e1e
+    classDef teal fill:#c3fae8,stroke:#06b6d4,color:#1e1e1e
+
+    class S1,S2,S3 amber
+    class C blue
+    class P yellow
+    class D purple
+    class A green
+    class G teal

@@ -1,0 +1,19 @@
+%% Sketch variant of using-it.mmd. Regenerate with: scripts/render-diagrams.sh
+%%{init: {"look": "handDrawn", "flowchart": {"wrappingWidth": 460}}}%%
+flowchart LR
+    S1["<b>1. See your courses</b><br/><br/>courses"]
+    S2["<b>2. Preview before downloading</b><br/><br/>archive-recent --years 4 --choose --dry-run"]
+    S3["<b>3. Download them</b><br/><br/>archive-recent --years 4 --choose"]
+    S4["<b>4. Optional: push to Google Drive</b><br/><br/>sync-drive --archive &lt;folder&gt;"]
+
+    S1 --> S2 --> S3 -.optional.-> S4
+
+    classDef blue fill:#a5d8ff,stroke:#4a9eed,color:#1e1e1e
+    classDef amber fill:#ffd8a8,stroke:#f59e0b,color:#1e1e1e
+    classDef purple fill:#d0bfff,stroke:#8b5cf6,color:#1e1e1e
+    classDef green fill:#b2f2bb,stroke:#22c55e,color:#1e1e1e
+
+    class S1 blue
+    class S2 amber
+    class S3 purple
+    class S4 green
